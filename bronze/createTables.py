@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
 import os
 
 # COMMAND ----------
@@ -23,6 +27,7 @@ for file in files:
     df = spark.read \
         .option("header", "true") \
         .option("inferSchema", "true") \
+        .option("encoding", "ISO-8859-1") \
         .csv(raw_path + file)
 
     table_name = os.path.splitext(file)[0]
