@@ -55,13 +55,11 @@ display(df)
 # COMMAND ----------
 
 # DBTITLE 1,Convert validity dates to date type
-# Adicionar coluna IS_CURRENT antes da conversão (usando valor integer)
 df = df.withColumn(
     "IS_CURRENT",
     when(col("VALIDITY_ENDDATE") == 99991231, True).otherwise(False)
 )
 
-# Converter colunas de validade de integer para date
 df = df.withColumn(
     "VALIDITY_STARTDATE", 
     to_date(col("VALIDITY_STARTDATE").cast("string"), "yyyyMMdd")
