@@ -1,0 +1,66 @@
+# Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
+from pyspark.sql.functions import *
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC WITH date_sequence AS (
+# MAGIC     SELECT
+# MAGIC         EXPLODE(SEQUENCE(
+# MAGIC             TO_DATE('2017-01-01'),
+# MAGIC             TO_DATE('2027-12-31'),
+# MAGIC             INTERVAL 1 DAY
+# MAGIC         )) AS COMPLETE_DATE
+# MAGIC )
+# MAGIC
+# MAGIC SELECT
+# MAGIC     ROW_NUMBER() OVER(ORDER BY COMPLETE_DATE) AS DATEID,
+# MAGIC     COMPLETE_DATE,
+# MAGIC     YEAR(COMPLETE_DATE) AS YEAR,
+# MAGIC     MONTH(COMPLETE_DATE) AS MONTH,
+# MAGIC     DAY(COMPLETE_DATE) AS DAY
+# MAGIC FROM date_sequence
+# MAGIC
+# MAGIC UNION ALL
+# MAGIC
+# MAGIC SELECT
+# MAGIC     -1 AS DATEID,
+# MAGIC     NULL AS COMPLETE_DATE,
+# MAGIC     -1 AS YEAR,
+# MAGIC     -1 AS MONTH,
+# MAGIC     -1 AS DAY
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC CREATE OR REPLACE TABLE bikesales.gold.dim_time AS
+# MAGIC
+# MAGIC WITH date_sequence AS (
+# MAGIC     SELECT
+# MAGIC         EXPLODE(SEQUENCE(
+# MAGIC             TO_DATE('2017-01-01'),
+# MAGIC             TO_DATE('2027-12-31'),
+# MAGIC             INTERVAL 1 DAY
+# MAGIC         )) AS COMPLETE_DATE
+# MAGIC )
+# MAGIC
+# MAGIC SELECT
+# MAGIC     ROW_NUMBER() OVER(ORDER BY COMPLETE_DATE) AS DATEID,
+# MAGIC     COMPLETE_DATE,
+# MAGIC     YEAR(COMPLETE_DATE) AS YEAR,
+# MAGIC     MONTH(COMPLETE_DATE) AS MONTH,
+# MAGIC     DAY(COMPLETE_DATE) AS DAY
+# MAGIC FROM date_sequence
+# MAGIC
+# MAGIC UNION ALL
+# MAGIC
+# MAGIC SELECT
+# MAGIC     -1 AS DATEID,
+# MAGIC     NULL AS COMPLETE_DATE,
+# MAGIC     -1 AS YEAR,
+# MAGIC     -1 AS MONTH,
+# MAGIC     -1 AS DAY
